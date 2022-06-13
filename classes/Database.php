@@ -79,15 +79,6 @@ class Database{
     }
 
 
-
-    public function complete_order($id, $order_date){
-        $query = "UPDATE `orders` SET `done` = '1' WHERE `user_id` = ? AND `order_date` = ?;";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $stmt->bind_param("is", $id, $order_date);
-        $success = $stmt->execute();
-        return $success;
-    }
-
     public function get_all_users(){
         $query = "SELECT * FROM users";
         $stmt = mysqli_prepare($this->conn, $query);
@@ -108,39 +99,6 @@ class Database{
 
     }
 
-    public function get_completed_orders(){
-        $query = "SELECT DISTINCT user_id, name, email, order_date, address, zip FROM `orders` JOIN users ON users.id = user_id WHERE done = 1 ORDER BY order_date;";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $success = $stmt->execute();
-        if(!$success) {
-            var_dump($stmt->error);
-        }
-        $result = $stmt->get_result();
-        $db_users = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        return $db_users;
-    }
-
-    public function update_user(User $user){
-        $query = "UPDATE users SET name = ?, email = ?, user_type = ?, address = ?, zip = ? WHERE id = ?";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $name = $user->get_name();
-        $email = $user->get_email();
-        $user_type = $user->get_user_type();
-        $address = $user->get_address();
-        $zip = $user->get_zip();
-        $id = $user->get_id();
-        $stmt->bind_param("sssssi", $name, $email, $user_type, $address, $zip, $id);
-        $success = $stmt->execute();
-        return $success;
-    }
-
-    public function delete_user_by_id($id){
-        $query = "DELETE FROM users WHERE id = ?";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $stmt->bind_param("i", $id);
-        return $stmt->execute();
-    }
-
     public function update_product(Product $product){
         $query = "UPDATE products SET title = ?, price= ?, description = ?, quantity = ?, size = ?, creation_date = ?, last_edited = ?, image = ?, article_number = ? WHERE id = ?";
         $stmt = mysqli_prepare($this->conn, $query);
@@ -156,19 +114,6 @@ class Database{
         $id = $product->get("id");
         $stmt->bind_param("sdsisssbsi", $title, $price, $description, $quantity, $size, $creation_date, $last_edited, $image, $article_number, $id);
         return $stmt->execute();
-    }
-
-    public function get_completed_orders_by_userid($id){
-        $query = "SELECT order_date, address, zip, title, order_quantity, done, orders.id AS order_id FROM `orders` JOIN `products` ON orders.product_id = products.id JOIN `users` ON users.id = orders.user_id WHERE done = 1 AND user_id = ? ORDER BY order_date;";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $stmt->bind_param("s", $id);
-        $success = $stmt->execute();
-        if(!$success) {
-            var_dump($stmt->error);
-        }
-        $result = $stmt->get_result();
-        $db_orders = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        return $db_orders;
     }
 
     public function get_google_user_id(User $user){
