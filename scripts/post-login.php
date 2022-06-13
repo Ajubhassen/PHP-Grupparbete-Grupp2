@@ -14,10 +14,7 @@ if ($user) {
     if ($success) {
         $_SESSION["user"] = $user;
         $_SESSION["logged_in"] = true;
-        http_response_code(200);
         header("Location: /sites/E-commerce/pages/index.php");
-        
-        
     }else{
         http_response_code(400);
     }

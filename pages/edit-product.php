@@ -16,14 +16,14 @@ $product = $db->get_product_by_id($_GET["id"]);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/sites/E-commerce/assets/style.css">
+    <link rel="stylesheet" href="/sites/gruppinlämning/assets/style.css">
     <title>Edit product</title>
 </head>
 
 <body>
 <?php require_once __DIR__ . "/../components/navbar.php" ?>
     <h2>Edit Product: <?= $product->get("title")?></h2>
-    <form action="/sites/E-commerce/scripts/post-edit-product.php?id=<?=$product->get("id")?>" method="post">
+    <form action="/sites/gruppinlämning/scripts/post-edit-product.php?id=<?=$product->get("id")?>" method="post">
         <label for="title">Title:</label>
         <input type="text" name="title" value="<?= $product->get("title") ?>">
         <label for="price">Price:</label>

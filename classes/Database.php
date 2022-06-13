@@ -17,68 +17,10 @@ class Database{
         if (!$this->conn) die ("Could not connect to database");
     }
 
-    public function get_user_by_email($email){
-        $query = "SELECT * FROM `users` WHERE email LIKE (?)";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $db_user = mysqli_fetch_assoc($result);
-
-        if ($db_user) {
-            $user = new User($db_user["name"], $db_user["email"], $db_user["user_type"], $db_user["id"]);
-            $user->set_address($db_user["address"]);
-            $user->set_zip($db_user["zip"]);
-            $user->set_hash($db_user["hash_password"]);
-            return $user;
-        }
-        $user = null;
-        return $user;
-    }
-
-    public function save_user(User $user)
-    {
-        $query = "INSERT INTO users (name, email, user_type, hash_password) VALUES (?, ?, ?, ?)";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $name = $user->get_name();
-        $email = $user->get_email();
-        $password_hash = $user->get_password_hash();
-        $user_type = $user->get_user_type();
-        $stmt->bind_param("ssss", $name, $email, $user_type, $password_hash );
-        return $stmt->execute();
-    }
-
-    public function new_order(Order $order, User $user){
-        $query = "INSERT INTO orders (`user_id`, product_id, order_quantity, order_date, done) VALUES (?,?,?,?,0)";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $user_id = $user->get_id();
-        $product_id = $order->get_product_id();
-        $quantity = $order->get_quantity();
-        $date = $order->get_date();
-        $stmt->bind_param("iiis", $user_id, $product_id, $quantity, $date);
-        return $stmt->execute();
-    }
-
-    public function get_orders_by_user_id($id){
-        $query = "SELECT * FROM orders JOIN users ON users.id = orders.user_id WHERE user_id LIKE ?";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $stmt->bind_param("s", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $order = mysqli_fetch_assoc($result);
-        
-    }
-
     public function delete_order_by_id($id){
         $query = "DELETE FROM orders WHERE id = ?";
         $stmt = mysqli_prepare($this->conn, $query);
         $stmt->bind_param("s", $id);
-        return $stmt->execute();
-    }
-    public function delete_order_by_email($email){
-        $query = "DELETE FROM orders JOIN users ON users.id = orders.user_id WHERE users.email LIKE ?";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $stmt->bind_param("s", $email);
         return $stmt->execute();
     }
 
@@ -102,28 +44,6 @@ class Database{
         $stmt = mysqli_prepare($this->conn, $query);
         $stmt->bind_param("s", $id);
         return $stmt->execute();
-    }
-
-    public function get_users_by_order(){
-        $query = "SELECT DISTINCT user_id, name, email, order_date, address, zip FROM `orders` JOIN users ON users.id = user_id WHERE done = 0 ORDER BY order_date;";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $db_order = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        return $db_order;
-    }
-
-    public function get_product_from_order_id($id){
-        $query = "SELECT orders.id AS order_id, products.id AS product_id, user_id, order_quantity, title, price, size, article_number, image, email, order_date FROM orders JOIN products ON product_id = products.id JOIN users ON user_id = users.id WHERE users.id = ? AND done = 0 ORDER BY order_date DESC";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $stmt->bind_param("i", $id);
-        $success = $stmt->execute();
-        if (!$success) {
-            var_dump($stmt->error);
-        }
-        $result = $stmt->get_result();
-        $db_order = mysqli_fetch_all($result, MYSQLI_ASSOC); 
-        return $db_order;
     }
 
     public function get_all_products() {
@@ -158,16 +78,7 @@ class Database{
         return $products;
     }
 
-    public function update_user_location(User $user){
-        $query = "UPDATE users SET address = ?, zip = ? WHERE id = ?";
-        $stmt = mysqli_prepare($this->conn, $query);
-        $address = $user->get_address();
-        $zip = $user->get_zip();
-        $id = $user->get_id();
-        $stmt->bind_param("ssi", $address, $zip, $id);
-        $success = $stmt->execute();
-        return $success;
-    }
+
 
     public function complete_order($id, $order_date){
         $query = "UPDATE `orders` SET `done` = '1' WHERE `user_id` = ? AND `order_date` = ?;";

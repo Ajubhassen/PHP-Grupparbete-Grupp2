@@ -6,7 +6,7 @@ if (!isset($_SESSION['access_token'])) {
     //Create a URL to obtain user authorization
     $google_login_btn = '<a href="' . $google_client->createAuthUrl() . '">Login with Google</a>';
 } else {
-    header("Location: /sites/E-commerce/google/google-login.php");
+    header("Location: /sites/gruppinlämning/google/google-login.php");
 }
 ?>
 <!DOCTYPE html>
@@ -15,14 +15,14 @@ if (!isset($_SESSION['access_token'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/sites/E-commerce/assets/style.css">
+    <link rel="stylesheet" href="/sites/gruppinlämning/assets/style.css">
     <title>Login</title>
 </head>
 <body>
 
 <h2>Please Log in</h2>
-<a href="/sites/E-commerce/pages/index.php">Home</a>
-    <form action="/sites/E-commerce/scripts/post-login.php" method="post">
+<a href="/sites/gruppinlämning/pages/index.php">Home</a>
+    <form action="/sites/gruppinlämning/scripts/post-login.php" method="post">
         <input type="email" name="email" placeholder="Email:">
         <input type="password" name="password" placeholder="Password:">
         <button type="submit">Log in</button>

@@ -11,13 +11,13 @@ $products = $db->get_all_products();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/sites/E-commerce/assets/style.css">
+    <link rel="stylesheet" href="/sites/gruppinlämning/assets/style.css">
     <title>Products</title>
 </head>
 <body>
 <?php require_once __DIR__ . "/../components/navbar.php" ?>
     <h2>Products:</h2>
-    <a href="/sites/E-commerce/pages/add-new-product.php">Add new product</a>
+    <a href="/sites/gruppinlämning/pages/add-new-product.php">Add new product</a>
     <hr>
     <table class="admin-table">
         <tr>
@@ -36,7 +36,7 @@ $products = $db->get_all_products();
         <?php foreach ($products as $product) : ?>
 
             <tr class="admin-table-items">
-                <form action="/sites/E-commerce/scripts/delete-product-by-id.php?id=<?=$product->get("id")?>" method="post">
+                <form action="/sites/gruppinlämning/scripts/delete-product-by-id.php?id=<?=$product->get("id")?>" method="post">
 
                     <td><img src="<?= $product->get("image") ?>" alt="<?= $product->get("title") ?>"></td>
                     <td><?= $product->get("title") ?></td>
